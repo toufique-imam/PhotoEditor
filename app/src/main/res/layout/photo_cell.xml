@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:layout_margin="5dp"
+    android:background="#FFABAB">
+
+    <ImageView
+        android:id="@+id/image_view_photo_cell"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="5dp"
+        android:src="@drawable/baseline_image_24"
+        android:contentDescription="thumb_image" />
+
+    <Button
+        android:id="@+id/button_edit_photo_cell"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="5dp"
+        android:layout_toStartOf="@id/button_delete_photo_cell"
+        android:drawableLeft="@drawable/baseline_edit_24"
+        android:text="@string/edit" />
+
+    <Button
+        android:id="@+id/button_delete_photo_cell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="5dp"
+        android:drawableLeft="@drawable/baseline_delete_24"
+        android:text="@string/delete" />
+</RelativeLayout>
