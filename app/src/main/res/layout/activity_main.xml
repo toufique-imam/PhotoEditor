@@ -7,11 +7,10 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/image_view_main"
+    <retro.line.photoeditor.views.opengl.CanvasView
+        android:id="@+id/canvas_view_main"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:background="#FF0000"
         android:contentDescription="@string/main_canvas_view" />
 
     <Button

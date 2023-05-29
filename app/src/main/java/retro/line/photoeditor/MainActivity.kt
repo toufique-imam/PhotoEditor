@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import retro.line.photoeditor.databinding.ActivityMainBinding
 import retro.line.photoeditor.views.EditPhotoAdapter
 import retro.line.photoeditor.views.EditPhotoCellDelegate
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity(), EditPhotoCellDelegate {
     }
 
     private fun setImageFromURI(uri: Uri) {
-        binding.imageViewMain.setImageURI(uri)
+        binding.canvasViewMain.setImageUri(uri)
     }
 
     override fun onEditPhoto(position: Int) {
@@ -63,7 +64,7 @@ class MainActivity : AppCompatActivity(), EditPhotoCellDelegate {
 
     override fun onDeletePhoto(position: Int) {
         if (selectedPositionInData == position) {
-            binding.imageViewMain.setImageResource(0)
+//            binding.imageViewMain.setImageResource(0)
         }
     }
 }

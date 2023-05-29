@@ -4,6 +4,7 @@ import android.net.Uri
 import android.widget.Button
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import retro.line.photoeditor.databinding.PhotoCellBinding
 
 interface EditPhotoCellDelegate {
@@ -29,6 +30,7 @@ class EditPhotoCellView(binding: PhotoCellBinding) :
     }
 
     fun setImageFromURI(uri: Uri) {
-        imageView.setImageURI(uri)
+        Glide.with(this.itemView).load(uri).centerCrop().into(this.imageView)
+//        imageView.setImageURI(uri)
     }
 }
