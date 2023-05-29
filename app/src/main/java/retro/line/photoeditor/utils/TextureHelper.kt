@@ -1,14 +1,14 @@
 package retro.line.photoeditor.utils
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.Image
 import android.net.Uri
 import android.opengl.GLES20.*
 import android.opengl.GLUtils
-import android.provider.MediaStore
-import android.widget.ImageView
-import java.io.InputStream
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+
 
 class TextureHelper {
     companion object {
@@ -76,6 +76,53 @@ class TextureHelper {
             glGenerateMipmap(GL_TEXTURE_2D) //generates mipmap
             glBindTexture(GL_TEXTURE_2D, 0) //unbinds the texture so no further changes to this texture
             return textureObjectIds[0]
+        }
+        fun getUriInfo(context: Context, uri: Uri?): Pair<Int,Int> {
+            if(uri == null){
+                return Pair(0,0);
+            }
+
+            val options : BitmapFactory.Options = BitmapFactory.Options()
+            options.inScaled = false // original image data instead of a scaled version of the data
+            val data = context.contentResolver.openInputStream(uri)
+            val bitmap = BitmapFactory.decodeStream(data)
+            data?.close()
+            if (bitmap == null){
+                LoggerConfig.e(TAG, "$uri couldn't be decoded")
+                return Pair(0,0)
+            }
+            val ans = Pair(bitmap.width, bitmap.height)
+            bitmap.recycle()
+            return ans
+        }
+        fun saveTexture(width: Int, height: Int, textureId: Int): Bitmap? {
+            val frame = intArrayOf(1)
+            glGenFramebuffers(1,frame,0)
+            checkGlError("glGenFramebuffers");
+            glBindFramebuffer(GL_FRAMEBUFFER, frame[0])
+            checkGlError("glBindFramebuffer");
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0)
+            checkGlError("glFramebufferTexture2D");
+            val buffer = ByteBuffer.allocateDirect(width * height * 4)
+            buffer.order(ByteOrder.nativeOrder())
+
+            glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer)
+            checkGlError("glReadPixels");
+
+            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            bitmap.copyPixelsFromBuffer(buffer)
+
+            glBindFramebuffer(GL_FRAMEBUFFER, 0)
+            checkGlError("glBindFramebuffer");
+            glDeleteFramebuffers(1,frame,0)
+            checkGlError("glDeleteFramebuffer");
+            return bitmap
+        }
+        private fun checkGlError(op: String) {
+            var error: Int
+            while (glGetError().also { error = it } != GL_NO_ERROR) {
+                throw RuntimeException("$op: glError $error")
+            }
         }
     }
 }

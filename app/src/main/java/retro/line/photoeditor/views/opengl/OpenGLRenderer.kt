@@ -1,12 +1,12 @@
 package retro.line.photoeditor.views.opengl
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.opengl.GLSurfaceView
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 import android.opengl.GLES20.*
-import android.opengl.Matrix
 import retro.line.photoeditor.R
 import retro.line.photoeditor.utils.LoggerConfig
 import retro.line.photoeditor.utils.TextureHelper
@@ -34,6 +34,14 @@ class OpenGLRenderer(private val context: Context): GLSurfaceView.Renderer {
             imageUri = uri
             changeTexture = true
         }
+    }
+    fun getBitmap(): Bitmap? {
+        val imageInfo = TextureHelper.getUriInfo(context, imageUri)
+        LoggerConfig.e("check", "Image info ${imageInfo.first} ${imageInfo.second}")
+        if(imageInfo.first == 0 || imageInfo.second == 0){
+            return null
+        }
+        return TextureHelper.saveTexture(imageInfo.first, imageInfo.second, texture)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {

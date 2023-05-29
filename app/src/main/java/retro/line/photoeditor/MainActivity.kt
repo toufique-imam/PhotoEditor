@@ -1,7 +1,10 @@
 package retro.line.photoeditor
 
+import android.R.attr.bitmap
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
@@ -9,10 +12,13 @@ import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import retro.line.photoeditor.databinding.ActivityMainBinding
 import retro.line.photoeditor.views.EditPhotoAdapter
 import retro.line.photoeditor.views.EditPhotoCellDelegate
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
+
 
 class MainActivity : AppCompatActivity(), EditPhotoCellDelegate {
     private lateinit var binding: ActivityMainBinding
@@ -54,6 +60,18 @@ class MainActivity : AppCompatActivity(), EditPhotoCellDelegate {
 
     private fun setImageFromURI(uri: Uri) {
         binding.canvasViewMain.setImageUri(uri)
+        binding.canvasViewMain.saveImage { data->
+            if(data != null){
+                val savedImagePath =
+                    this.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.absolutePath
+                val imageFileName = "PhotoEditor_rand.png"
+                val imageFile = File(savedImagePath, imageFileName)
+
+                val stream: OutputStream = FileOutputStream(imageFile)
+                data.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                stream.close()
+            }
+        }
     }
 
     override fun onEditPhoto(position: Int) {

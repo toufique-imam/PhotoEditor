@@ -1,6 +1,7 @@
 package retro.line.photoeditor.views.opengl
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
@@ -23,8 +24,16 @@ class CanvasView : GLSurfaceView {
         renderMode = RENDERMODE_WHEN_DIRTY
     }
     fun setImageUri(uri: Uri){
+
+        //TODO use this.queueEvent
         renderer.setImageUri(uri)
         requestRender()
+    }
+    fun saveImage(callback: ((bitmap: Bitmap?)->Unit)) {
+        this.queueEvent {
+            val x = renderer.getBitmap()
+            callback(x)
+        }
     }
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         // MotionEvent reports input details from the touch screen
